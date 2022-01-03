@@ -8,12 +8,11 @@ dataSources:
     kind: ethereum/contract
     network: {{network}}
     source:
-      address: '{{address}}'
       abi: Token
       startBlock: {{block}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/events.ts
       entities:

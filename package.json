@@ -1,7 +1,7 @@
 {
-  "name": "defi-balance",
+  "name": "defi-allowances",
   "version": "1.0.0",
-  "repository": "https://github.com/valve-finance/erc20",
+  "repository": "https://github.com/andreujuanc/erc20",
   "license": "MIT",
   "scripts": {
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
@@ -12,27 +12,8 @@
     "launch": "npm run prepare:mainnet && npm run codegen && npm run build && npm run deploy"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "0.18.0",
-    "@graphprotocol/graph-ts": "0.18.0",
-    "@typescript-eslint/eslint-plugin": "^2.0.0",
-    "@typescript-eslint/parser": "^2.0.0",
-    "eslint": "^6.2.2",
-    "eslint-config-prettier": "^6.1.0",
-    "husky": "^3.0.5",
-    "lint-staged": "^9.2.5",
-    "prettier": "^1.18.2",
-    "typescript": "^3.5.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,css,md}": [
-      "prettier --write --config ./.prettierrc",
-      "git add"
-    ]
+    "@graphprotocol/graph-cli": "^0.23.2",
+    "@graphprotocol/graph-ts": "^0.23.1"
   },
   "dependencies": {
     "cross-var": "^1.1.0",

@@ -5,17 +5,9 @@ import {
   Approval,
   Transfer
 } from '../types/ERC20/Token'
+import { zeroBD } from './common'
+import { createUser } from './users'
 
-let zeroBD = BigDecimal.fromString('0')
-
-function createUser(
-  userId: string
-): User {
-  let UserStats = new User(userId)
-  UserStats.balance = zeroBD
-  UserStats.save()
-  return UserStats as User
-}
 
 function exponentToBigDecimal(decimals: i32): BigDecimal {
   let bd = BigDecimal.fromString('1')
