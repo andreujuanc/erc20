@@ -1,12 +1,12 @@
 import { BigInt, BigDecimal, log } from '@graphprotocol/graph-ts'
-import { Asset, User, UserApproval } from '../types/schema'
-import { createAsset } from './assets'
+import { Asset, User } from '../types/schema'
+import { getOrCreateAsset } from './assets'
 import {
   Approval,
   Transfer
 } from '../types/ERC20/Token'
-import { zeroBD } from './common'
-import { createUser } from './users'
+import { createUser, getOrCreateUserToken } from './users'
+import { getOrCreateUserApproval } from './userApproval'
 
 
 function exponentToBigDecimal(decimals: i32): BigDecimal {
@@ -19,75 +19,61 @@ function exponentToBigDecimal(decimals: i32): BigDecimal {
 
 export function handleApproval(event: Approval): void {
   const assetID = event.address.toHexString()
-  let asset = Asset.load(assetID)
-  if (asset == null) {
-    asset = createAsset(assetID)
-    asset.save()
-  }
+  const asset = getOrCreateAsset(assetID)
+  const userToken = getOrCreateUserToken(event.params.owner.toHexString(), assetID)
 
-  const AssetDecimals = asset.decimals
-  const AssetDecimalsBD: BigDecimal = exponentToBigDecimal(AssetDecimals)
-  //APPROVAL ID TOKEN-USER-SPENDER
-  const approvalID = assetID.concat('-').concat(event.params.owner.toHexString()).concat('-').concat(event.params.spender.toHexString())
+  const AssetDecimalsBD: BigDecimal = exponentToBigDecimal(asset.decimals)
+  const approval = getOrCreateUserApproval(assetID, event, userToken)
 
-  let approval = UserApproval.load(approvalID)
-  if (approval == null) {
-    approval = new UserApproval(approvalID)
-    approval.token = assetID
-    approval.owner = event.params.owner.toHex()
-    approval.spender = event.params.spender
-    approval.count = BigInt.fromI32(0)
-    approval.value = zeroBD
-  }
+  userToken.approvalCount = userToken.approvalCount.plus(BigInt.fromI32(1))
+  userToken.save()
 
-  approval.count = approval.count.plus(BigInt.fromI32(1))
   approval.value = approval.value.plus(
     event.params.value
       .toBigDecimal()
       .div(AssetDecimalsBD)
-      .truncate(AssetDecimals),
+      .truncate(asset.decimals),
   )
   approval.save()
 }
 
+
 export function handleTransfer(event: Transfer): void {
   const assetID = event.address.toHexString()
-  let asset = Asset.load(assetID)
-  if (asset == null) {
-    asset = createAsset(assetID)
-    asset.save()
-  }
+  const asset = getOrCreateAsset(assetID)
 
   const AssetDecimals = asset.decimals
   const AssetDecimalsBD: BigDecimal = exponentToBigDecimal(AssetDecimals)
-  
+
   const userFromID = event.params.from.toHex()
   if (userFromID != assetID) {
-    let UserStatsFrom = User.load(userFromID)
-    if (UserStatsFrom == null) {
-      UserStatsFrom = createUser(userFromID)
-    }
-    UserStatsFrom.balance = UserStatsFrom.balance.minus(
+    const userToken = getOrCreateUserToken(userFromID, assetID)
+    userToken.balance = userToken.balance.minus(
       event.params.value
         .toBigDecimal()
         .div(AssetDecimalsBD)
         .truncate(AssetDecimals),
     )
-    UserStatsFrom.save()
+    userToken.save()
   }
-  
+
   const userToID = event.params.to.toHex()
   if (userToID != assetID) {
-    let UserStatsTo = User.load(userToID)
-    if (UserStatsTo == null) {
-      UserStatsTo = createUser(userToID)
-    }
-    UserStatsTo.balance = UserStatsTo.balance.plus(
+    const userToken = getOrCreateUserToken(userFromID, assetID)
+    userToken.balance = userToken.balance.plus(
       event.params.value
         .toBigDecimal()
         .div(AssetDecimalsBD)
         .truncate(AssetDecimals),
     )
-    UserStatsTo.save()
+    userToken.save()
   }
+}
+
+function getOrCreateUser(userFromID: string) {
+  let UserStatsFrom = User.load(userFromID)
+  if (UserStatsFrom == null) {
+    UserStatsFrom = createUser(userFromID)
+  }
+  return UserStatsFrom
 }

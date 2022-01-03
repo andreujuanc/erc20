@@ -18,10 +18,29 @@ User is a single ethereum address and related information
 type User @entity {
     "User wallet address"
     id: ID!
-    "Token balance of the user"
-    balance: BigDecimal!
-    "Array of approvals for user"
-    approvals: [UserApproval!]! @derivedFrom(field: "owner")
+    "Number of tokens"
+    tokenCount: BigInt!
+    "User tokens"
+    tokens: [UserToken!]! @derivedFrom(field: "owner")
+}
+
+
+"""
+UserToken is the token info for a user
+"""
+type UserToken @entity {
+  "User+Token"
+  id: ID!
+  "Token balance of the user"
+  balance: BigDecimal!
+  "Approved token to use"
+  token: Asset!
+  "Relation to user"
+  owner: User!
+  "Number of approvals"
+  approvalCount: BigInt!
+  "Array of approvals for user"
+  approvals: [UserApproval!]! @derivedFrom(field: "userToken")
 }
 
 """
@@ -30,8 +49,8 @@ Approvals of tokens and related information
 type UserApproval @entity {
   "Owner address + Spender address"
   id: ID!
-  "Number of approvals"
-  count: BigInt!
+  "Relation to user token"
+  userToken: UserToken!
   "Relation to user"
   owner: User!
   "Spender of approval"
