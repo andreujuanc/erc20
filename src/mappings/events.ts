@@ -34,7 +34,7 @@ export function handleApproval(event: Approval): void {
     approval.count = BigInt.fromI32(0)
     approval.value = zeroBD
   }
-  approval.count = approval.count + BigInt.fromI32(1)
+  approval.count = approval.count.plus(BigInt.fromI32(1))
   approval.owner = event.params.owner.toHex()
   approval.spender = event.params.spender
   approval.value = approval.value.plus(
