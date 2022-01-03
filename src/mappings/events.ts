@@ -33,10 +33,11 @@ export function handleApproval(event: Approval): void {
   let approval = UserApproval.load(approvalID)
   if (approval == null) {
     approval = new UserApproval(approvalID)
-    approval.count = BigInt.fromI32(0)
-    approval.value = zeroBD
+    approval.token = assetID
     approval.owner = event.params.owner.toHex()
     approval.spender = event.params.spender
+    approval.count = BigInt.fromI32(0)
+    approval.value = zeroBD
   }
 
   approval.count = approval.count.plus(BigInt.fromI32(1))

@@ -38,4 +38,6 @@ type UserApproval @entity {
   spender: Bytes!
   "Value of approvals"
   value: BigDecimal!
+  "Approved token to use"
+  token: Asset!
 }
