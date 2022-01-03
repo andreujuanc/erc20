@@ -5,7 +5,7 @@ import {
   Approval,
   Transfer
 } from '../types/ERC20/Token'
-import { createUser, getOrCreateUserToken } from './users'
+import { getOrCreateUserToken } from './users'
 import { getOrCreateUserApproval } from './userApproval'
 
 
@@ -68,12 +68,4 @@ export function handleTransfer(event: Transfer): void {
     )
     userToken.save()
   }
-}
-
-function getOrCreateUser(userFromID: string) {
-  let UserStatsFrom = User.load(userFromID)
-  if (UserStatsFrom == null) {
-    UserStatsFrom = createUser(userFromID)
-  }
-  return UserStatsFrom
 }

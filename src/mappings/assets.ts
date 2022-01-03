@@ -2,7 +2,7 @@ import { Address } from '@graphprotocol/graph-ts'
 import { Asset } from '../types/schema'
 import { Token } from '../types/ERC20/Token'
 
-export function getOrCreateAsset(assetID: string) {
+export function getOrCreateAsset(assetID: string) : Asset{
   let asset = Asset.load(assetID)
   if (asset == null) {
     asset = createAsset(assetID)

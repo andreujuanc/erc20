@@ -2,7 +2,7 @@ import { UserApproval, UserToken } from '../types/schema';
 import { Approval } from '../types/ERC20/Token';
 import { zeroBD } from './common';
 
-export function getOrCreateUserApproval(assetID: string, event: Approval, userToken: UserToken) {
+export function getOrCreateUserApproval(assetID: string, event: Approval, userToken: UserToken): UserApproval {
   const approvalID = assetID.concat('-').concat(event.params.owner.toHexString()).concat('-').concat(event.params.spender.toHexString())
 
   let approval = UserApproval.load(approvalID);
