@@ -31,6 +31,7 @@ export function getOrCreateUserToken(user: string, token: string): UserToken {
   const userTokenID = user.concat('-').concat(token)
   let userToken = UserToken.load(userTokenID)
   if (userToken == null) {
+    getOrCreateUser(user)
     userToken = createUserToken(userTokenID)
     userToken.owner = user
     userToken.token = token
