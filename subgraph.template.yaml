@@ -4,12 +4,31 @@ repository: https://github.com/andreujuanc/erc20-allowances
 schema:
   file: ./schema.graphql
 dataSources:
-  - name: ERC20
+  - name: Creator
     kind: ethereum/contract
     network: {{network}}
     source:
       abi: Token
       startBlock: {{block}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/mappings/events.ts
+      entities:
+        - Asset
+      abis:
+        - name: Token
+          file: ./abis/token.json
+      blockHandlers:
+        - handler: handleBlock
+          
+templates:
+  - name: ERC20
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: Token
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

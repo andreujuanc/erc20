@@ -1,13 +1,23 @@
-import { BigInt, BigDecimal, log } from '@graphprotocol/graph-ts'
+import { BigInt, BigDecimal, log, ethereum, Address } from '@graphprotocol/graph-ts'
 import { Asset, User } from '../types/schema'
 import { getOrCreateAsset } from './assets'
 import {
   Approval,
   Transfer
 } from '../types/ERC20/Token'
-import { getOrCreateUserToken } from './users'
+import { getOrCreateUserToken } from "./userToken"
 import { getOrCreateUserApproval } from './userApproval'
+import { ERC20 } from '../types/templates'
 
+import { tokens } from '../tokens/mainnet'
+
+export function handleBlock(block: ethereum.Block): void {
+  if (block.number.equals(BigInt.fromString('12343210'))) {
+    const first = tokens[0]
+    const address = Address.fromString(first)
+    ERC20.create(address)
+  }
+}
 
 function exponentToBigDecimal(decimals: i32): BigDecimal {
   let bd = BigDecimal.fromString('1')
