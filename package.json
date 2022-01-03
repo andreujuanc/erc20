@@ -1,7 +1,7 @@
 {
   "name": "defi-allowances",
   "version": "1.0.0",
-  "repository": "https://github.com/andreujuanc/erc20",
+  "repository": "https://github.com/andreujuanc/erc20-allowances",
   "license": "MIT",
   "scripts": {
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",

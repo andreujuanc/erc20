@@ -5,7 +5,7 @@ This subgraph template enables developers to track  balances and approvals for E
 
 ## Useful Links
 
-Example Subgraph is hosted at: https://thegraph.com/explorer/subgraph/valve-finance/erc20. You can also try below queries in the playground.
+Example Subgraph is hosted at: https://thegraph.com/explorer/subgraph/andreujuanc/erc20-allowances. You can also try below queries in the playground.
 
 
 ## Build Instructions

@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 description: ERC-20 subgraph with all the pertinent event handlers & entities
-repository: https://github.com/valve-finance/erc20
+repository: https://github.com/andreujuanc/erc20-allowances
 schema:
   file: ./schema.graphql
 dataSources:
