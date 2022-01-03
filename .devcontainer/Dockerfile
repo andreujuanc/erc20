@@ -1,7 +1,7 @@
 FROM node:14-bullseye-slim
 
 RUN apt update
-RUN apt install -y git
+RUN apt install -y git python3
 
 
 ARG USER_UID=1000
