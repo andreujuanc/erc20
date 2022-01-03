@@ -1,7 +1,7 @@
 FROM node:14-bullseye-slim
 
 RUN apt update
-RUN apt install -y git python3
+RUN apt install -y git python3 libsecret-1-dev build-essential
 
 
 ARG USER_UID=1000
