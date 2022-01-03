@@ -1,5 +1,5 @@
 import { BigInt, BigDecimal, log } from '@graphprotocol/graph-ts'
-import { Asset, User, UserApproval} from '../types/schema'
+import { Asset, User, UserApproval } from '../types/schema'
 import { createAsset } from './assets'
 import {
   Approval,
@@ -18,45 +18,49 @@ function exponentToBigDecimal(decimals: i32): BigDecimal {
 }
 
 export function handleApproval(event: Approval): void {
-  // this is the address specified in the config/mainnet.json file
-  let assetID = event.address.toHexString()
+  const assetID = event.address.toHexString()
   let asset = Asset.load(assetID)
   if (asset == null) {
     asset = createAsset(assetID)
     asset.save()
   }
-  let AssetDecimals = asset.decimals
-  let AssetDecimalsBD: BigDecimal = exponentToBigDecimal(AssetDecimals)
-  let approvalID = event.params.owner.toHexString().concat('-').concat(event.params.spender.toHexString())
+
+  const AssetDecimals = asset.decimals
+  const AssetDecimalsBD: BigDecimal = exponentToBigDecimal(AssetDecimals)
+  //APPROVAL ID TOKEN-USER-SPENDER
+  const approvalID = assetID.concat('-').concat(event.params.owner.toHexString()).concat('-').concat(event.params.spender.toHexString())
+
   let approval = UserApproval.load(approvalID)
   if (approval == null) {
     approval = new UserApproval(approvalID)
     approval.count = BigInt.fromI32(0)
     approval.value = zeroBD
+    approval.owner = event.params.owner.toHex()
+    approval.spender = event.params.spender
   }
+
   approval.count = approval.count.plus(BigInt.fromI32(1))
-  approval.owner = event.params.owner.toHex()
-  approval.spender = event.params.spender
   approval.value = approval.value.plus(
     event.params.value
-    .toBigDecimal()
-    .div(AssetDecimalsBD)
-    .truncate(AssetDecimals),
+      .toBigDecimal()
+      .div(AssetDecimalsBD)
+      .truncate(AssetDecimals),
   )
   approval.save()
 }
 
 export function handleTransfer(event: Transfer): void {
-  // this is the address specified in the config/mainnet.json file
-  let assetID = event.address.toHexString()
+  const assetID = event.address.toHexString()
   let asset = Asset.load(assetID)
   if (asset == null) {
     asset = createAsset(assetID)
     asset.save()
   }
-  let AssetDecimals = asset.decimals
-  let AssetDecimalsBD: BigDecimal = exponentToBigDecimal(AssetDecimals)
-  let userFromID = event.params.from.toHex()
+
+  const AssetDecimals = asset.decimals
+  const AssetDecimalsBD: BigDecimal = exponentToBigDecimal(AssetDecimals)
+  
+  const userFromID = event.params.from.toHex()
   if (userFromID != assetID) {
     let UserStatsFrom = User.load(userFromID)
     if (UserStatsFrom == null) {
@@ -70,7 +74,8 @@ export function handleTransfer(event: Transfer): void {
     )
     UserStatsFrom.save()
   }
-  let userToID = event.params.to.toHex()
+  
+  const userToID = event.params.to.toHex()
   if (userToID != assetID) {
     let UserStatsTo = User.load(userToID)
     if (UserStatsTo == null) {
