@@ -14,7 +14,7 @@ import { tokens } from '../tokens/mainnet'
 export function handleBlock(block: ethereum.Block): void {
   if (block.number.equals(BigInt.fromString('12343210'))) { // dataSource.context()????  dataSource.network??
     for (let i = 0; i < tokens.length; i++) {
-      const first = tokens[0]
+      const first = tokens[i]
       const address = Address.fromString(first)
       ERC20.create(address)
     }
