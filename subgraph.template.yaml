@@ -8,6 +8,7 @@ dataSources:
     kind: ethereum/contract
     network: {{network}}
     source:
+      address: "{{address}}"
       abi: Token
       startBlock: {{block}}
     mapping:
@@ -22,7 +23,7 @@ dataSources:
           file: ./abis/token.json
       blockHandlers:
         - handler: handleBlock
-          
+
 templates:
   - name: ERC20
     kind: ethereum/contract
